@@ -1,6 +1,8 @@
 defmodule SoapboxWeb.Router do
   use SoapboxWeb, :router
 
+  alias Soapbox.Guardian
+
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
@@ -13,14 +15,29 @@ defmodule SoapboxWeb.Router do
     plug :accepts, ["json"]
   end
 
+  pipeline :api_authenticated do
+    plug Guardian.AuthPipeline
+  end
+
+  scope "/api", SoapboxWeb do
+    pipe_through :api
+
+    post "/sign_up", UserController, :create
+    post "/auth", UserController, :auth
+
+    # This is going to get moved into the authenticated section
+    # resources "/users", UserController, except: [:new, :edit]
+  end
+
+  scope "/api", SoapboxWeb do
+    pipe_through [:api, :api_authenticated]
+
+    resources "/users", UserController, except: [:new, :create, :edit]
+  end
+
   scope "/", SoapboxWeb do
     pipe_through :browser
 
-    get "/", PageController, :index
+    get "/*path", PageController, :index
   end
-
-  # Other scopes may use custom stacks.
-  # scope "/api", SoapboxWeb do
-  #   pipe_through :api
-  # end
 end

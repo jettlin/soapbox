@@ -16,3 +16,6 @@ config :soapbox, SoapboxWeb.Endpoint,
 
 # Print only warnings and errors during test
 config :logger, level: :warn
+
+# Turn down BCRYPT so that it will not slow down tests
+config :bcrypt_elixir, :log_rounds, 4
