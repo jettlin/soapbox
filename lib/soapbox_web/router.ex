@@ -33,6 +33,7 @@ defmodule SoapboxWeb.Router do
     pipe_through [:api, :api_authenticated]
 
     resources "/users", UserController, except: [:new, :create, :edit]
+    resources "/videos", VideoController, except: [:new, :edit]
   end
 
   scope "/", SoapboxWeb do

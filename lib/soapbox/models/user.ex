@@ -12,6 +12,9 @@ defmodule Soapbox.Models.User do
     field :password, :string, virtual: true
     field :password_confirmation, :string, virtual: true
 
+    # relationships
+    has_many :videos, Soapbox.Models.Video
+
     # Timestamps are added by default, good to have
     timestamps()
   end

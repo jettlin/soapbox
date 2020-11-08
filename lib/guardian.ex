@@ -2,7 +2,7 @@ defmodule Soapbox.Guardian do
   use Guardian, otp_app: :soapbox
 
   def subject_for_token(user, _claims) do
-    sub = user.id
+    sub = %{id: user.id, role: user.role}
     {:ok, sub}
   end
 

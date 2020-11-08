@@ -10,10 +10,7 @@ defmodule SoapboxWeb.UserController do
   def index(conn, _params) do
     resource = Guardian.Plug.current_resource(conn)
 
-    IO.puts resource.username
-    IO.puts resource.role
-
-    users = if (resource.role == "admin"), do: Models.list_users(), else: []
+    users = if (resource.role == "admin"), do: Models.list_users(), else: [resource]
 
     render(conn, "index.json", users: users)
   end
@@ -50,7 +47,7 @@ defmodule SoapboxWeb.UserController do
 
   def auth(conn, %{"username" => username, "password" => password}) do
     case Models.token_sign_in(username, password) do
-      {:ok, token, _claims} -> conn |> render("jwt.json", jwt: token)
+      {:ok, token, claims} -> conn |> render("jwt.json", jwt: token, role: claims["sub"].role)
       _ -> {:error, :unauthorized}
     end
   end

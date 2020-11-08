@@ -10,9 +10,10 @@ defmodule SoapboxWeb.UserView do
     %{data: render_one(user, UserView, "user.json")}
   end
 
-  def render("jwt.json", %{jwt: jwt}) do
+  def render("jwt.json", %{jwt: jwt, role: role}) do
     %{
-      jwt: jwt
+      jwt: jwt,
+      role: role
     }
   end
 
