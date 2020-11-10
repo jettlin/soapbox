@@ -149,6 +149,10 @@ defmodule Soapbox.Models do
     Repo.all(Video)
   end
 
+  def list_videos_for(user_id) do
+    Repo.get_by(Video, user_id: user_id)
+  end
+
   @doc """
   Gets a single video.
 

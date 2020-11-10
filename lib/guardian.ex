@@ -11,7 +11,7 @@ defmodule Soapbox.Guardian do
   end
 
   def resource_from_claims(claims) do
-    id = claims["sub"]
+    id = claims["sub"]["id"]
     resource = Soapbox.Models.get_user!(id)
     {:ok, resource}
   end

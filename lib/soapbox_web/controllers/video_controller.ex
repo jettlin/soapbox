@@ -7,12 +7,22 @@ defmodule SoapboxWeb.VideoController do
   action_fallback SoapboxWeb.FallbackController
 
   def index(conn, _params) do
-    videos = Models.list_videos()
+    resource = Guardian.Plug.current_resource(conn)
+
+    videos = if (resource.role == "admin"), do: Models.list_videos(), else: Models.list_videos_for(resource.id)
     render(conn, "index.json", videos: videos)
   end
 
-  def create(conn, %{"video" => video_params}) do
-    with {:ok, %Video{} = video} <- Models.create_video(video_params) do
+  def create(conn, %{"name" => name, "file" => video_src}) do
+    resource = Guardian.Plug.current_resource(conn)
+
+    IO.inspect video_src
+    IO.puts String.split(video_src.filename, ".")
+
+    with {:ok, %Video{} = video} <- Models.create_video(%{ user_id: resource.id, name: name }) do
+      extension = List.last(String.split(video_src.filename, "."))
+      File.cp(video_src.path, Path.absname("priv/static/videos/#{video.id}.#{extension}"))
+
       conn
       |> put_status(:created)
       |> put_resp_header("location", Routes.video_path(conn, :show, video))
