@@ -11,9 +11,12 @@ defmodule SoapboxWeb.VideoView do
   end
 
   def render("video.json", %{video: video}) do
+    assets = Soapbox.Models.get_assets_for(video)
+
     %{
       id: video.id,
-      name: video.name
+      name: video.name,
+      assets: render_many(assets, SoapboxWeb.AssetView, "asset.json")
     }
   end
 end

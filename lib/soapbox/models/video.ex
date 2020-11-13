@@ -6,6 +6,7 @@ defmodule Soapbox.Models.Video do
     field :name, :string
 
     belongs_to :user, Soapbox.Models.User
+    has_many :assets, Soapbox.Models.Asset, on_delete: :delete_all
 
     timestamps()
   end

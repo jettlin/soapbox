@@ -127,4 +127,134 @@ defmodule Soapbox.ModelsTest do
       assert %Ecto.Changeset{} = Models.change_video(video)
     end
   end
+
+  describe "assets" do
+    alias Soapbox.Models.Asset
+
+    @valid_attrs %{duration: 120.5, is_original: true, name: "some name", src: "some src"}
+    @update_attrs %{duration: 456.7, is_original: false, name: "some updated name", src: "some updated src"}
+    @invalid_attrs %{duration: nil, is_original: nil, name: nil, src: nil}
+
+    def asset_fixture(attrs \\ %{}) do
+      {:ok, asset} =
+        attrs
+        |> Enum.into(@valid_attrs)
+        |> Models.create_asset()
+
+      asset
+    end
+
+    test "list_assets/0 returns all assets" do
+      asset = asset_fixture()
+      assert Models.list_assets() == [asset]
+    end
+
+    test "get_asset!/1 returns the asset with given id" do
+      asset = asset_fixture()
+      assert Models.get_asset!(asset.id) == asset
+    end
+
+    test "create_asset/1 with valid data creates a asset" do
+      assert {:ok, %Asset{} = asset} = Models.create_asset(@valid_attrs)
+      assert asset.duration == 120.5
+      assert asset.is_original == true
+      assert asset.name == "some name"
+      assert asset.src == "some src"
+    end
+
+    test "create_asset/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Models.create_asset(@invalid_attrs)
+    end
+
+    test "update_asset/2 with valid data updates the asset" do
+      asset = asset_fixture()
+      assert {:ok, %Asset{} = asset} = Models.update_asset(asset, @update_attrs)
+      assert asset.duration == 456.7
+      assert asset.is_original == false
+      assert asset.name == "some updated name"
+      assert asset.src == "some updated src"
+    end
+
+    test "update_asset/2 with invalid data returns error changeset" do
+      asset = asset_fixture()
+      assert {:error, %Ecto.Changeset{}} = Models.update_asset(asset, @invalid_attrs)
+      assert asset == Models.get_asset!(asset.id)
+    end
+
+    test "delete_asset/1 deletes the asset" do
+      asset = asset_fixture()
+      assert {:ok, %Asset{}} = Models.delete_asset(asset)
+      assert_raise Ecto.NoResultsError, fn -> Models.get_asset!(asset.id) end
+    end
+
+    test "change_asset/1 returns a asset changeset" do
+      asset = asset_fixture()
+      assert %Ecto.Changeset{} = Models.change_asset(asset)
+    end
+  end
+
+  describe "edits" do
+    alias Soapbox.Models.Edit
+
+    @valid_attrs %{end: 120.5, scale: 42, start: 120.5, type: "some type"}
+    @update_attrs %{end: 456.7, scale: 43, start: 456.7, type: "some updated type"}
+    @invalid_attrs %{end: nil, scale: nil, start: nil, type: nil}
+
+    def edit_fixture(attrs \\ %{}) do
+      {:ok, edit} =
+        attrs
+        |> Enum.into(@valid_attrs)
+        |> Models.create_edit()
+
+      edit
+    end
+
+    test "list_edits/0 returns all edits" do
+      edit = edit_fixture()
+      assert Models.list_edits() == [edit]
+    end
+
+    test "get_edit!/1 returns the edit with given id" do
+      edit = edit_fixture()
+      assert Models.get_edit!(edit.id) == edit
+    end
+
+    test "create_edit/1 with valid data creates a edit" do
+      assert {:ok, %Edit{} = edit} = Models.create_edit(@valid_attrs)
+      assert edit.end == 120.5
+      assert edit.scale == 42
+      assert edit.start == 120.5
+      assert edit.type == "some type"
+    end
+
+    test "create_edit/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Models.create_edit(@invalid_attrs)
+    end
+
+    test "update_edit/2 with valid data updates the edit" do
+      edit = edit_fixture()
+      assert {:ok, %Edit{} = edit} = Models.update_edit(edit, @update_attrs)
+      assert edit.end == 456.7
+      assert edit.scale == 43
+      assert edit.start == 456.7
+      assert edit.type == "some updated type"
+    end
+
+    test "update_edit/2 with invalid data returns error changeset" do
+      edit = edit_fixture()
+      assert {:error, %Ecto.Changeset{}} = Models.update_edit(edit, @invalid_attrs)
+      assert edit == Models.get_edit!(edit.id)
+    end
+
+    test "delete_edit/1 deletes the edit" do
+      edit = edit_fixture()
+      assert {:ok, %Edit{}} = Models.delete_edit(edit)
+      assert_raise Ecto.NoResultsError, fn -> Models.get_edit!(edit.id) end
+    end
+
+    test "change_edit/1 returns a edit changeset" do
+      edit = edit_fixture()
+      assert %Ecto.Changeset{} = Models.change_edit(edit)
+    end
+  end
 end

@@ -13,7 +13,7 @@ defmodule Soapbox.Models.User do
     field :password_confirmation, :string, virtual: true
 
     # relationships
-    has_many :videos, Soapbox.Models.Video
+    has_many :videos, Soapbox.Models.Video, on_delete: :delete_all
 
     # Timestamps are added by default, good to have
     timestamps()
