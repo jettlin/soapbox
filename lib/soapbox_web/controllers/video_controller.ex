@@ -29,7 +29,9 @@ defmodule SoapboxWeb.VideoController do
         # in case we have a larger video we want to spawn this out to enure getting the duration is not causing a socket timeout
         spawn fn ->
           duration = FFprobe.duration(Path.absname("priv/static/videos/#{video.id}/#{asset.id}.#{extension}"))
-          Models.update_asset(asset, %{ src: "/videos/#{video.id}/#{asset.id}.#{extension}", duration: duration })
+
+          { _, asset } = Models.update_asset(asset, %{ src: "/videos/#{video.id}/#{asset.id}.#{extension}", duration: duration })
+          Models.generate_screenshot(asset)
         end
 
         conn
@@ -55,8 +57,9 @@ defmodule SoapboxWeb.VideoController do
         Models.create_edit(changes)
       end
 
-      asset
-      |> Models.process_asset(Path.absname("priv/static#{o_asset.src}"))
+      spawn fn ->
+        Models.process_asset(asset, Path.absname("priv/static#{o_asset.src}"))
+      end
 
       render(conn, "show.json", video: video)
     end

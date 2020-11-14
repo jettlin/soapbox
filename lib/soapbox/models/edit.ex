@@ -27,6 +27,7 @@ defmodule Soapbox.Models.Edit do
     case type do
       "trim" -> validate_present(changeset, [:start, :end])
       "rotate" -> validate_present(changeset, [:scale])
+      "scale" -> validate_present(changeset, [:scale])
       _ -> add_error(changeset, :type, "Invalid type provided")
     end
   end

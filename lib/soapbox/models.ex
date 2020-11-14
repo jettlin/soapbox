@@ -464,4 +464,17 @@ defmodule Soapbox.Models do
     duration = FFprobe.duration(Path.absname("priv/static/videos/#{video.id}/#{asset.id}.#{extension}"))
     update_asset(asset, %{ src: "/videos/#{video.id}/#{asset.id}.#{extension}", duration: duration })
   end
+
+  def generate_screenshot(%Asset{} = asset) do
+    video = Repo.one(Ecto.assoc(asset, :video))
+
+    command =
+      FFmpex.new_command
+      |> add_global_option(option_y())
+      |> add_input_file(Path.absname("priv/static/#{asset.src}"))
+      |> add_output_file(Path.absname("priv/static/videos/#{video.id}/screenshot.jpg"))
+        |> add_file_option(option_vframes(1))
+
+    execute(command)
+  end
 end

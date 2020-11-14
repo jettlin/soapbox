@@ -12,7 +12,7 @@ defmodule SoapboxWeb.UserView do
 
   def render("jwt.json", %{jwt: jwt, role: role}) do
     %{
-      jwt: jwt,
+      token: jwt,
       role: role
     }
   end
