@@ -12,7 +12,7 @@ defmodule SoapboxWeb.VideoController do
     resource = Guardian.Plug.current_resource(conn)
 
     videos = if (resource.role == "admin"), do: Models.list_videos(), else: Models.list_videos_for(resource.id)
-    render(conn, "index.json", videos: videos)
+    render(conn, "index.json", videos: videos || [])
   end
 
   def create(conn, %{"file" => video_src}) do
