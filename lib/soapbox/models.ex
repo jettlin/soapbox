@@ -150,7 +150,8 @@ defmodule Soapbox.Models do
   end
 
   def list_videos_for(user_id) do
-    Repo.get_by(Video, user_id: user_id)
+    query = from v in Video, where: v.user_id == ^user_id
+    Repo.all(query)
   end
 
   @doc """

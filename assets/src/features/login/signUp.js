@@ -51,8 +51,15 @@ const SignUp = ({ show, onClose = () => { } }) => {
   }
 
   const handleSubmit = () => {
-    if (pass.length < 8) setPassErr('Must be at least 8 characters long');
-    if (pass !== passConf) setPassConfErr('Does not match password');
+    if (pass.length < 8) {
+      setPassErr('Must be at least 8 characters long');
+      return;
+    }
+
+    if (pass !== passConf) {
+      setPassConfErr('Does not match password');
+      return;
+    }
 
     const data = {
       username: user,

@@ -22,6 +22,7 @@ const slice = createSlice({
     },
     loadVideoError: (state, action) => {
       state.error = action.payload.error;
+      state.list = [];
       state.loading = false;
     },
     setLoading: (state, action) => {
